@@ -18,7 +18,13 @@ class PersistentWiFiManager
       _server = server;
       _dnsServer = dnsServer;
     }*/
-    static void setServers(ESP8266WebServer &server, DNSServer &dnsServer);
+        static ESP8266WebServer& _server;
+    static DNSServer& _dnsServer;
+    
+    static void setServers(ESP8266WebServer &server, DNSServer &dnsServer){
+      _server = server;
+      _dnsServer = dnsServer;
+    }
 
     static void begin();
     
@@ -27,9 +33,10 @@ class PersistentWiFiManager
 
     static void setupWiFiHandlers();
     
-    static ESP8266WebServer& _server;
-    static DNSServer& _dnsServer;
-    
+
+
+    static ESP8266WebServer* serverP(){return &_server;}
+    static DNSServer* dnsServerP(){return &_dnsServer;}
 
   private:
     PersistentWiFiManager(){}

@@ -1,5 +1,10 @@
 #include "PersistentWiFiManager.h"
 
+    
+
+
+
+
 bool PersistentWiFiManager::attemptConnection(String ssid, String pass) {
 
   //attempt to connect to wifi
@@ -22,14 +27,14 @@ bool PersistentWiFiManager::attemptConnection(String ssid, String pass) {
     WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
     WiFi.softAP("ESP8266");
   } //if
-  _dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
-  _dnsServer.start((byte)53, "*", apIP); //used for captive portal in AP mode
+  dnsServerP()->setErrorReplyCode(DNSReplyCode::NoError);
+  dnsServerP()->start((byte)53, "*", apIP); //used for captive portal in AP mode
 }
 
 
 void PersistentWiFiManager::setupWiFiHandlers() {
 
-  PersistentWiFiManager::_server.on("/wifi/list", [] () {
+  serverP()->on("/wifi/list", [] () {
     //scan for wifi networks
     int n = WiFi.scanNetworks();
 
@@ -54,11 +59,11 @@ void PersistentWiFiManager::setupWiFiHandlers() {
     }
 
     //send string to client
-    PersistentWiFiManager::_server.send(200, "text/plain", s);
+    serverP()->send(200, "text/plain", s);
   }); //server.on /wifi/list
 
-  PersistentWiFiManager::_server.on("/wifi/wps", []() {
-    PersistentWiFiManager::_server.send(200, "text/html", "attempting WPS");
+  serverP()->on("/wifi/wps", []() {
+    serverP()->send(200, "text/html", "attempting WPS");
     WiFi.mode(WIFI_STA);
     WiFi.beginWPSConfig();
     delay(100);
@@ -67,18 +72,18 @@ void PersistentWiFiManager::setupWiFiHandlers() {
     }
   }); //server.on /wifi/wps
 
-  PersistentWiFiManager::_server.on("/wifi/connect", []() {
-    PersistentWiFiManager::_server.send(200, "text/html", "attempting to connect...");
-    attemptConnection(PersistentWiFiManager::_server.arg("n"), PersistentWiFiManager::_server.arg("p"));
+  serverP()->on("/wifi/connect", []() {
+    serverP()->send(200, "text/html", "attempting to connect...");
+    attemptConnection(serverP()->arg("n"), serverP()->arg("p"));
   }); //server.on /wifi/connect
 
 } //void setupWiFiHandlers
 
-
+/*
 void PersistentWiFiManager::setServers(ESP8266WebServer &server, DNSServer &dnsServer) {
-  PersistentWiFiManager::_server = server;
-  PersistentWiFiManager::_dnsServer = dnsServer;
-}
+  serverP() = server;
+  dnsServerP() = dnsServer;
+}*/
 
 void PersistentWiFiManager::begin() {
   setupWiFiHandlers();
