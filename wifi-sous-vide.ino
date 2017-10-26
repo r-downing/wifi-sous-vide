@@ -7,14 +7,15 @@
 #include <DNSServer.h>
 #include <FS.h>
 
-#include "PersistentWiFiManager.h"
-
-//#define WIFI_CONNECT_TIMEOUT 30
+#include "PersWiFIManager.h"
 
 #define RELAY_PIN D7
 #define PULSEWIDTH 5000
 
 #define DEVICE_NAME "Sous Vide"
+
+
+
 
 //temperature sensor libraries and variables
 #include <OneWire.h>
@@ -42,7 +43,6 @@ void updateTemperature() {
 ESP8266WebServer server(80);
 int scannedNetworks, scanssid;
 DNSServer dnsServer;
-//IPAddress apIP(192, 168, 1, 1);
 
 //code from fsbrowser example, consolidated.
 bool handleFileRead(String path) {
@@ -93,8 +93,9 @@ void setup() {
   pinMode(RELAY_PIN, OUTPUT);
   digitalWrite(RELAY_PIN, HIGH);
 
-  //networkSetup("", "");
-  PersistentWiFiManager::begin(server, dnsServer);
+  PersWiFiManager::setServers(server, dnsServer);
+  PersWiFiManager::attemptConnection("", "");
+  PersWiFiManager::setupWiFiHandlers();
 
   //serve files from SPIFFS
   server.onNotFound([]() {
