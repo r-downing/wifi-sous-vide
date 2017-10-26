@@ -6,7 +6,10 @@
 #include <ESP8266WebServer.h>
 #include <DNSServer.h>
 #include <FS.h>
-#define WIFI_CONNECT_TIMEOUT 30
+
+#include "PersistentWiFiManager.h"
+
+//#define WIFI_CONNECT_TIMEOUT 30
 
 #define RELAY_PIN D7
 #define PULSEWIDTH 5000
@@ -39,7 +42,7 @@ void updateTemperature() {
 ESP8266WebServer server(80);
 int scannedNetworks, scanssid;
 DNSServer dnsServer;
-IPAddress apIP(192, 168, 1, 1);
+//IPAddress apIP(192, 168, 1, 1);
 
 //code from fsbrowser example, consolidated.
 bool handleFileRead(String path) {
@@ -74,6 +77,7 @@ bool handleFileRead(String path) {
   return false;
 } //bool handleFileRead
 
+/*
 void networkSetup(String ssid, String pass) {
   //attempt to connect to wifi
   WiFi.mode(WIFI_STA);
@@ -142,6 +146,8 @@ void networkSetup(String ssid, String pass) {
 
 } //void networkSetup
 
+*/
+
 void setup() {
   Serial.begin(115200); //for terminal debugging
   Serial.println();
@@ -157,7 +163,9 @@ void setup() {
   pinMode(RELAY_PIN, OUTPUT);
   digitalWrite(RELAY_PIN, HIGH);
 
-  networkSetup("", "");
+  //networkSetup("", "");
+  PersistentWiFiManager::setServers(server, dnsServer);
+  PersistentWiFiManager::begin();
 
   //serve files from SPIFFS
   server.onNotFound([]() {
