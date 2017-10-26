@@ -70,7 +70,12 @@ bool handleFileRead(String path) {
       server.sendHeader("Content-Disposition", " attachment;");
     if (server.uri().indexOf("nocache") < 0)
       server.sendHeader("Cache-Control", " max-age=172800");
-    size_t sent = server.streamFile(file, contentType);
+    if (WiFi.status() == WL_CONNECTED && server.hasArg("alt")) {
+      server.sendHeader("Location", server.arg("alt"), true);
+      server.send ( 302, "text/plain", "");
+    } else{
+      size_t sent = server.streamFile(file, contentType);
+    }
     file.close();
     return true;
   } //if SPIFFS.exists

@@ -48,7 +48,7 @@ void setupWiFiHandlers() {
     //sort by signal strength
     for (int i = 0; i < n; i++) for (int j = 1; j < n - i; j++) if (WiFi.RSSI(ix[j]) > WiFi.RSSI(ix[j - 1])) std::swap(ix[j], ix[j - 1]);
     //remove duplicates
-    for (int i = 0; i < n; i++) for (int j = i + 1; j < n; j++) if (WiFi.SSID(ix[i]).equals(WiFi.SSID(ix[j]))) ix[j] = -1;
+    for (int i = 0; i < n; i++) for (int j = i + 1; j < n; j++) if (WiFi.SSID(ix[i]).equals(WiFi.SSID(ix[j])) && WiFi.encryptionType(ix[i]) == WiFi.encryptionType(ix[j])) ix[j] = -1;
 
     //build plain text string of wifi info
     //format [signal%]:[encrypted 0 or 1]:SSID
@@ -79,6 +79,12 @@ void setupWiFiHandlers() {
     _server->send(200, "text/html", "attempting to connect...");
     attemptConnection(_server->arg("n"), _server->arg("p"));
   }); //_server->on /wifi/connect
+
+  _server->on("/wifi/rst", [](){
+    _server->send(200, "text/html", "Rebooting...");
+    delay(100);
+    ESP.restart();
+  });
 
 }//setupWiFiHandlers
 
