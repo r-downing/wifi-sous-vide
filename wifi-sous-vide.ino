@@ -164,8 +164,7 @@ void setup() {
   digitalWrite(RELAY_PIN, HIGH);
 
   //networkSetup("", "");
-  PersistentWiFiManager::setServers(server, dnsServer);
-  PersistentWiFiManager::begin();
+  PersistentWiFiManager::begin(server, dnsServer);
 
   //serve files from SPIFFS
   server.onNotFound([]() {

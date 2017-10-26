@@ -13,33 +13,23 @@
 class PersistentWiFiManager
 {
   public:
-  /*
-    PersistentWiFiManager(ESP8266WebServer &server DNSServer &dnsServer) {
-      _server = server;
-      _dnsServer = dnsServer;
-    }*/
-        static ESP8266WebServer& _server;
-    static DNSServer& _dnsServer;
-    
-    static void setServers(ESP8266WebServer &server, DNSServer &dnsServer){
-      _server = server;
-      _dnsServer = dnsServer;
-    }
-
-    static void begin();
-    
-    static bool attemptConnection(String ssid, String pass);
+    /*
+      PersistentWiFiManager(ESP8266WebServer &server DNSServer &dnsServer) {
+        _server = server;
+        _dnsServer = dnsServer;
+      }*/
 
 
-    static void setupWiFiHandlers();
-    
+    static void begin(ESP8266WebServer &_server, DNSServer &_dnsServer);
 
 
-    static ESP8266WebServer* serverP(){return &_server;}
-    static DNSServer* dnsServerP(){return &_dnsServer;}
+    static bool attemptConnection(String ssid, String pass, ESP8266WebServer &_server, DNSServer &_dnsServer);
+
+    static void setupWiFiHandlers(ESP8266WebServer &_server, DNSServer &_dnsServer);
+
 
   private:
-    PersistentWiFiManager(){}
+    PersistentWiFiManager() {}
 
 };
 
