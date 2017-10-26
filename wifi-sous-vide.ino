@@ -62,10 +62,23 @@ bool handleFileRead(String path) {
   else if (path.endsWith(".gz")) contentType = "application/x-gzip";
   else if (path.endsWith(".json")) contentType = "application/json";
   else contentType = "text/plain";
-  String pathGz = path + ".gz";
-  if (SPIFFS.exists(pathGz) || SPIFFS.exists(path)) {
+
+  int lastPeriod = path.lastIndexOf('.');
+  if (lastPeriod >= 0) {
+    //split filepath and extension
+    String prefix = path.substring(0, lastPeriod);
+    String ext = path.substring(lastPeriod);
+    //minified file, good (myscript.min.js)
+    if (SPIFFS.exists(prefix + ".min" + ext)) path = prefix + ".min" + ext;
+    //gzipped file, better (myscript.js.gz)
+    if (SPIFFS.exists(prefix + ext + ".gz")) path = prefix + ext + ".gz";
+    //min and gzipped file, best (myscript.min.js.gz)
+    if (SPIFFS.exists(prefix + ".min" + ext + ".gz")) path = prefix + ".min" + ext + ".gz";
+  }
+
+  if (SPIFFS.exists(path)) {
     Serial.println("sending file " + path);
-    File file = SPIFFS.open(SPIFFS.exists(pathGz) ? pathGz : path, "r");
+    File file = SPIFFS.open(path, "r");
     if (server.hasArg("download"))
       server.sendHeader("Content-Disposition", " attachment;");
     if (server.uri().indexOf("nocache") < 0)
@@ -73,7 +86,7 @@ bool handleFileRead(String path) {
     if (WiFi.status() == WL_CONNECTED && server.hasArg("alt")) {
       server.sendHeader("Location", server.arg("alt"), true);
       server.send ( 302, "text/plain", "");
-    } else{
+    } else {
       size_t sent = server.streamFile(file, contentType);
     }
     file.close();
