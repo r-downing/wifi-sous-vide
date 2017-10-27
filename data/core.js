@@ -1,5 +1,5 @@
 var sousVide = angular.module('sousVide', []);
-sousVide.controller( 'mainController', function($scope, $http, $interval) {
+sousVide.controller( 'mainController', function($scope, $http, $interval,$httpParamSerializerJQLike) {
 	$scope.tRefresh=0;
 	$interval(function(){
 		$scope.tRefresh++;
@@ -7,7 +7,7 @@ sousVide.controller( 'mainController', function($scope, $http, $interval) {
 
 	$scope.submit = function(data){
 		$scope.tx = true;
-		$http.post('/io', $.param(data)).then(function(res) {
+		$http.post('/io', $httpParamSerializerJQLike(data)).then(function(res) {
 			$scope.data = res.data;
 			$scope.upTimeDisp = (new Date($scope.data.upTime)).toISOString().substr(11, 8);
 			$scope.tRefresh = 0;
@@ -17,7 +17,7 @@ sousVide.controller( 'mainController', function($scope, $http, $interval) {
 	};
 
 	$scope.submit({});
-	$('#st').focus();
+	document.getElementById('st').focus();
 
 	$interval(function(){
 		if(!$scope.tx) {
