@@ -117,7 +117,10 @@ void setup() {
 
   //serve files from SPIFFS
   server.onNotFound([]() {
-    if (!handleFileRead(server.uri())) server.send(302, "text/html", metaRefreshStr);
+    if (!handleFileRead(server.uri())){
+      server.sendHeader("Cache-Control", " max-age=172800");
+      server.send(302, "text/html", metaRefreshStr);
+    }
   }); //server.onNotFound
 
   //handles commands from webpage, sends live data in JSON format
