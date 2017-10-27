@@ -5,23 +5,24 @@
 	<title>ESP WiFi</title>
 	<script>
 		function g(i) { return document.getElementById(i); };
-		function c(l) { g('s').value = l.innerText || l.textContent; g('p').focus(); };
+		function c(l) { g('s').value = l.innerText; g('p').focus(); };
 		function p(t,l){if(confirm(t))window.location=l;};
+		var H="innerHTML";
 		var xh;
 		function scan() {
 			if (xh) return;
 			xh = new XMLHttpRequest(), wl = g('wl');
-			wl.innerHTML = "Scanning...";
+			wl[H] = "Scanning...";
 			xh.onreadystatechange = function () {
 				if (this.readyState == 4 && this.status == 200) {
 					xh = 0;
-					wl.innerHTML = "";
+					wl[H] = "";
 					this.responseText.split("\n").forEach(function (e, i) {
 						var t = e.split(":");
 						var s = t.shift();
 						var c = parseInt(t.shift());
 						var n = t.join(":");
-						wl.innerHTML += ("<div><a class='s' id='" + i + "' onclick='c(this)'></a> <a class='q'>"
+						wl[H] += ("<div><a class='s' id='" + i + "' onclick='c(this)'></a> <a class='q'>"
 							+ s + "%" + (c ? "\uD83D\uDD12" : "\u26A0") + "</a></div>");
 						g(i).appendChild(document.createTextNode(n));
 					});
@@ -73,13 +74,14 @@
 			width: 14em; 
 			overflow: hidden;
 			text-overflow: ellipsis; 
+			white-space: nowrap;
 		}
 	</style>
 </head>
 
 <body>
 	<div style='text-align:left;display:inline-block;width:320px;'>
-		<button onclick="scan()">Scan</button>
+		<button onclick="scan()">&#x21bb; Scan</button>
 		<br>
 		<span id='wl'></span>
 		<br>
