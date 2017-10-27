@@ -53,6 +53,7 @@ void setupWiFiHandlers() {
     //build plain text string of wifi info
     //format [signal%]:[encrypted 0 or 1]:SSID
     String s = "";
+    s.reserve(2050);
     for (int i = 0; i < n && s.length() < 2000; i++) { //check s.length to limit memory usage
       if (ix[i] != -1) {
         s += String(i ? "\n" : "") + ((constrain(WiFi.RSSI(ix[i]), -100, -50) + 100) * 2)
