@@ -4,9 +4,40 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<title>Sous Vide Control</title>
-	<script src="/angular.min.js?alt=https%3A%2F%2Fajax.googleapis.com%2Fajax%2Flibs%2Fangularjs%2F1.6.6%2Fangular.min.js"></script>
-	<script src="/core.js"></script>
+	<script>
+		tRefresh = 13;
+		data = { temperature: 3, setTemp: 4, power: .44 };
+		var myfunction = function () {
 
+			function html2text(html) {
+				var tag = document.createElement('div');
+				tag.innerHTML = html;
+
+				return tag.innerText;
+			}
+
+			var b = document.body.innerHTML.toString();
+			var nb = [];
+			b.split("{{").forEach(function (e, i) {
+				if (!i) {
+					nb.push(e);
+				} else {
+					var p = e.split("}}");
+					var ax;
+					try {
+						console.log("eval:" + p[0]);
+						ax = eval(html2text(p[0]));
+					} catch (e) {
+						ax = "";
+					}
+					nb.push(ax);
+					nb.push(p[1]);
+				}
+			});
+			document.body.innerHTML = nb.join("");
+			console.log(nb);
+		}
+	</script>
 	<style>
 		div,
 		input {
@@ -21,13 +52,13 @@
 		body {
 			text-align: center;
 			font-family: verdana;
-			font-size:1.1em;
+			font-size: 1.1em;
 			background-color: black;
-			color:white;
+			color: white;
 		}
 
 		a {
-			color:#1fa3ec;
+			color: #1fa3ec;
 		}
 
 		button {
@@ -37,7 +68,7 @@
 			color: #fff;
 			line-height: 2.4rem;
 			font-size: 1.2rem;
-			width: 40%;
+			width: 44%;
 			display: inline-block;
 			margin: 2%;
 		}
@@ -57,37 +88,38 @@
 		}
 
 		#nav {
-			display:block;
+			display: block;
 			text-align: center;
 		}
 	</style>
 </head>
 
-<body ng-controller="mainController">
+<body onload="myfunction()" ng-controller="mainController">
 	<h3> Sous Vide</h3>
 	<div style='text-align:left;display:inline-block;width:300px;'>
 		Current Set Point:
 		<a class="q">{{data.setTemp}} &deg;F</a>
 		<br> Current Temp:
 		<a class="q">{{data.temperature}} &deg;F</a>
-		<hr/> Power Level:
-		<a class="q">{{data.power*100 | number:2}}%</a>
+		<br> Power Level:
+		<a class="q">{{data.power*100}}%</a>
 		<br> Running:
 		<a class="q">{{data.running ? "On" : "Off"}}</a>
 		<br> Time @ Temp:
-		<a class="q">{{data.upTime | date:'HH:mm:ss':'UTC'}}</a>
+		<a class="q">{{upTimeDisp}}</a>
 		<br>
 		<span class="smalltext error" ng-show="data.errors.length">Errors: {{data.errors.join(", ")}}</span>
 		<br>
-		<span class="smalltext" style="{{(tRefresh>10&&tRefresh%2)?'color:red':''}}">Last updated {{tRefresh}} seconds ago.<br>
+		<span class="smalltext" style="{{(tRefresh>10&&tRefresh%2)?'color:red':''}}">Last updated {{tRefresh}} seconds ago.
+			<br>
 			<span ng-if="tx">Updating...</span>
 		</span>
 		<br>
-		<form style="text-align:center" ng-submit="submit(formData)">
-				<input type="number" placeholder="set temperature" id="st" ng-model="formData.setTemp" step=".1" min="0" max="400" />
-				<button type="submit">Set</button>
-				<button type="button" ng-click="submit({powerOff})">Off</button>
-			</form>
+		<form ng-submit="submit(formData)">
+			<input type="number" placeholder="set temperature" id="st" ng-model="formData.setTemp" step=".1" min="0" max="400" />
+			<button type="submit">Set</button>
+			<button type="button" ng-click="submit({powerOff})">Off</button>
+		</form>
 		<br>
 		<span id="nav">
 			<a href="/">Home</a> |

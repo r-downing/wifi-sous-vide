@@ -9,7 +9,7 @@ sousVide.controller( 'mainController', function($scope, $http, $interval,$httpPa
 		$scope.tx = true;
 		$http.post('/io', $httpParamSerializerJQLike(data)).then(function(res) {
 			$scope.data = res.data;
-			$scope.upTimeDisp = (new Date($scope.data.upTime)).toISOString().substr(11, 8);
+			//$scope.upTimeDisp = (new Date($scope.data.upTime)).toISOString().substr(11, 8);
 			$scope.tRefresh = 0;
 		}).finally(function(){
 			$scope.tx = false;
