@@ -76,7 +76,7 @@ void setupWiFiHandlers() {
   }); //_server->on /wifi/wps
 
   _server->on("/wifi/connect", []() {
-    _server->send(200, "text/html", "attempting to connect...");
+    _server->send(200, "text/html", "connecting...");
     attemptConnection(_server->arg("n"), _server->arg("p"));
   }); //_server->on /wifi/connect
 
