@@ -8,14 +8,11 @@
 	<script src="/core.js"></script>
 
 	<style>
-		div,
 		input {
 			padding: 5px;
 			font-size: 1em;
-		}
-
-		input {
 			width: 95%;
+			filter:invert(100%)
 		}
 
 		body {
@@ -65,7 +62,7 @@
 
 <body ng-controller="mainController">
 	<h3> Sous Vide</h3>
-	<div style='text-align:left;display:inline-block;width:300px;'>
+	<div style='text-align:left;display:inline-block;width:300px;padding:5px'>
 		Current Set Point:
 		<a class="q">{{data.setTemp}} &deg;F</a>
 		<br> Current Temp:
