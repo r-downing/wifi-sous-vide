@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<title>ESP WiFi</title>
 	<script>
 		function g(i) { return document.getElementById(i); };
 		function c(l) { g('s').value = l.innerText; g('p').focus(); };
-		function p(t,l){if(confirm(t))window.location=l;};
-		function E(s){return document.createElement(s)};/////////////////////////
-		var S="setAttribute";//////////////////////////
-		var A="appendChild";
-		var H="innerHTML";
+		function p(t, l) { if (confirm(t)) window.location = l; };
+		function E(s) { return document.createElement(s) };/////////////////////////
+		var S = "setAttribute";//////////////////////////
+		var A = "appendChild";
+		var H = "innerHTML";
 		var xh;
 		function scan() {
 			if (xh) return;
@@ -20,20 +21,20 @@
 				if (this.readyState == 4 && this.status == 200) {
 					xh = 0;
 					wl[H] = "";
-					this.responseText.split("\n").forEach(function (e, i) {
-						var t = e.split(":");
+					this.responseText.split("\n").forEach(function (e) {
+						var t = e.split(",");
 						// wl[H] += ("<div><a class='s' id='" + i + "' onclick='c(this)'></a> <a class='q'>"
 						// 	+ t[0] + "%" + (parseInt(t[1]) ? "\uD83D\uDD12" : "\u26A0") + "</a></div>");
 						// g(i).appendChild(document.createTextNode(t.slice(2).join(":")));
 
 						//https://stackoverflow.com/questions/32915485/how-to-prevent-unicode-characters-from-rendering-as-emoji-in-html-from-javascrip
 
-						var d = E('div'), a = E('a'), n=E('a');
-						a[S]('class','s');
-						n[S]('class','q');
-						a[S]('onclick','c(this)')
-						n[H]=t[0] + "%" + (parseInt(t[1]) ? "\uD83D\uDD12" : "\u26A0");
-						a[A](document.createTextNode(t.slice(2).join(":")));
+						var d = E('div'), a = E('a'), n = E('a');
+						a[S]('class', 's');
+						n[S]('class', 'q');
+						a[S]('onclick', 'c(this)')
+						n[H] = t[0] + "%" + (parseInt(t[1]) ? "\uD83D\uDD12" : "\u26A0");
+						a[A](document.createTextNode(t.slice(2).join(",")));
 						d[A](a);
 						d[A](n);
 						wl[A](d);
@@ -85,9 +86,9 @@
 
 		.s {
 			display: inline-block;
-			width: 14em; 
+			width: 14em;
 			overflow: hidden;
-			text-overflow: ellipsis; 
+			text-overflow: ellipsis;
 			white-space: nowrap;
 		}
 	</style>

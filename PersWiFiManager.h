@@ -56,9 +56,8 @@ void setupWiFiHandlers() {
     s.reserve(2050);
     for (int i = 0; i < n && s.length() < 2000; i++) { //check s.length to limit memory usage
       if (ix[i] != -1) {
-        s += String(i ? "\n" : "") + ((constrain(WiFi.RSSI(ix[i]), -100, -50) + 100) * 2)
-             + ":" + ((WiFi.encryptionType(ix[i]) == ENC_TYPE_NONE) ? 0 : 1)
-             + ":" + WiFi.SSID(ix[i]);
+        s += String(i ? "\n" : "") + ((constrain(WiFi.RSSI(ix[i]), -100, -50) + 100) * 2) + ","
+             + ((WiFi.encryptionType(ix[i]) == ENC_TYPE_NONE) ? 0 : 1) + "," + WiFi.SSID(ix[i]);
       }
     }
 
@@ -81,7 +80,7 @@ void setupWiFiHandlers() {
     attemptConnection(_server->arg("n"), _server->arg("p"));
   }); //_server->on /wifi/connect
 
-  _server->on("/wifi/rst", [](){
+  _server->on("/wifi/rst", []() {
     _server->send(200, "text/html", "Rebooting...");
     delay(100);
     ESP.restart();
