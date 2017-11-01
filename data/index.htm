@@ -79,7 +79,7 @@
 		<br>
 		<span class="smalltext error" ng-show="data.errors.length">Errors: {{data.errors.join(", ")}}</span>
 		<br>
-		<span class="smalltext" {{(tRefresh>10&&tRefresh%2)?'style="color:red"':''}}>Last updated {{tRefresh}} seconds ago.<br>
+		<span class="smalltext" style="{{((tRefresh>10&&tRefresh%2)?'color:red':'')}}" >Last updated {{tRefresh}} seconds ago.<br>
 			<span ng-if="tx">Updating...</span>
 		</span>
 		<br>
