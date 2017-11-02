@@ -1,3 +1,15 @@
+//#define DEBUG
+
+#ifdef DEBUG
+#define DEBUG_START Serial.begin(115200)
+#define DEBUG_PRINT(x) Serial.println(x)
+#else
+#define DEBUG_PRINT(x) 
+#define DEBUG_START
+#endif
+
+
+#include <PersWiFiManager.h>
 #include <AutoPID.h>
 #include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
@@ -6,8 +18,6 @@
 #include <ESP8266WebServer.h>
 #include <DNSServer.h>
 #include <FS.h>
-
-#include "PersWiFIManager.h"
 
 #define RELAY_PIN D7
 #define PULSEWIDTH 5000
@@ -41,10 +51,12 @@ void updateTemperature() {
 ESP8266WebServer server(80);
 int scannedNetworks, scanssid;
 DNSServer dnsServer;
+PersWiFiManager persWM(server, dnsServer);
+
 
 //code from fsbrowser example, consolidated.
 bool handleFileRead(String path) {
-  Serial.println("handlefileread" + path);
+  DEBUG_PRINT("handlefileread" + path);
   if (path.endsWith("/")) path += "index.htm";
   String contentType;
   if (path.endsWith(".htm") || path.endsWith(".html")) contentType = "text/html";
@@ -67,7 +79,7 @@ bool handleFileRead(String path) {
   if (lastPeriod >= 0) {
     prefix = path.substring(0, lastPeriod);
     ext = path.substring(lastPeriod);
-  } 
+  }
 
   //look for smaller versions of file
   //minified file, good (myscript.min.js)
@@ -78,7 +90,7 @@ bool handleFileRead(String path) {
   if (SPIFFS.exists(prefix + ".min" + ext + ".gz")) path = prefix + ".min" + ext + ".gz";
 
   if (SPIFFS.exists(path)) {
-    Serial.println("sending file " + path);
+    DEBUG_PRINT("sending file " + path);
     File file = SPIFFS.open(path, "r");
     if (server.hasArg("download"))
       server.sendHeader("Content-Disposition", " attachment;");
@@ -101,8 +113,8 @@ bool handleFileRead(String path) {
 
 
 void setup() {
-  Serial.begin(115200); //for terminal debugging
-  Serial.println();
+  DEBUG_START; //for terminal debugging
+  DEBUG_PRINT();
 
   //allows serving of files from SPIFFS
   SPIFFS.begin();
@@ -115,13 +127,11 @@ void setup() {
   pinMode(RELAY_PIN, OUTPUT);
   digitalWrite(RELAY_PIN, HIGH);
 
-  PersWiFiManager::setServers(server, dnsServer);
-  PersWiFiManager::attemptConnection("", "");
-  PersWiFiManager::setupWiFiHandlers();
+  persWM.begin();
 
   //serve files from SPIFFS
   server.onNotFound([]() {
-    if (!handleFileRead(server.uri())){
+    if (!handleFileRead(server.uri())) {
       server.sendHeader("Cache-Control", " max-age=172800");
       server.send(302, "text/html", metaRefreshStr);
     }
@@ -129,7 +139,7 @@ void setup() {
 
   //handles commands from webpage, sends live data in JSON format
   server.on("/io", []() {
-    Serial.println("server.on /io");////////////////////////
+    DEBUG_PRINT("server.on /io");////////////////////////
     if (server.hasArg("setTemp")) {
       powerOn = true;
       setTemp = server.arg("setTemp").toFloat();
@@ -174,7 +184,7 @@ void setup() {
   SSDP.setDeviceType("upnp:rootdevice");
 
   server.begin();
-  Serial.println("setup complete.");
+  DEBUG_PRINT("setup complete.");
 } //void setup
 
 void loop() {
