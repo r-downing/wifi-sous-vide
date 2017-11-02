@@ -15,8 +15,6 @@
 #define DEVICE_NAME "Sous Vide"
 
 
-
-
 //temperature sensor libraries and variables
 #include <OneWire.h>
 #include <DallasTemperature.h>
@@ -63,18 +61,21 @@ bool handleFileRead(String path) {
   else if (path.endsWith(".json")) contentType = "application/json";
   else contentType = "text/plain";
 
+  //split filepath and extension
+  String prefix = path, ext = "";
   int lastPeriod = path.lastIndexOf('.');
   if (lastPeriod >= 0) {
-    //split filepath and extension
-    String prefix = path.substring(0, lastPeriod);
-    String ext = path.substring(lastPeriod);
-    //minified file, good (myscript.min.js)
-    if (SPIFFS.exists(prefix + ".min" + ext)) path = prefix + ".min" + ext;
-    //gzipped file, better (myscript.js.gz)
-    if (SPIFFS.exists(prefix + ext + ".gz")) path = prefix + ext + ".gz";
-    //min and gzipped file, best (myscript.min.js.gz)
-    if (SPIFFS.exists(prefix + ".min" + ext + ".gz")) path = prefix + ".min" + ext + ".gz";
-  }
+    prefix = path.substring(0, lastPeriod);
+    ext = path.substring(lastPeriod);
+  } 
+
+  //look for smaller versions of file
+  //minified file, good (myscript.min.js)
+  if (SPIFFS.exists(prefix + ".min" + ext)) path = prefix + ".min" + ext;
+  //gzipped file, better (myscript.js.gz)
+  if (SPIFFS.exists(prefix + ext + ".gz")) path = prefix + ext + ".gz";
+  //min and gzipped file, best (myscript.min.js.gz)
+  if (SPIFFS.exists(prefix + ".min" + ext + ".gz")) path = prefix + ".min" + ext + ".gz";
 
   if (SPIFFS.exists(path)) {
     Serial.println("sending file " + path);
@@ -83,10 +84,13 @@ bool handleFileRead(String path) {
       server.sendHeader("Content-Disposition", " attachment;");
     if (server.uri().indexOf("nocache") < 0)
       server.sendHeader("Cache-Control", " max-age=172800");
+
+    //optional alt arg (encoded url), server sends redirect to file on the web
     if (WiFi.status() == WL_CONNECTED && server.hasArg("alt")) {
       server.sendHeader("Location", server.arg("alt"), true);
       server.send ( 302, "text/plain", "");
     } else {
+      //server sends file
       size_t sent = server.streamFile(file, contentType);
     }
     file.close();
