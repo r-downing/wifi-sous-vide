@@ -127,6 +127,7 @@ void setup() {
   pinMode(RELAY_PIN, OUTPUT);
   digitalWrite(RELAY_PIN, HIGH);
 
+  persWM.setApCredentials(DEVICE_NAME);
   persWM.begin();
 
   //serve files from SPIFFS
