@@ -21,6 +21,8 @@ void begin(ESP8266WebServer &server, const char* deviceName="ESP8266") {
   SSDP.setSchemaURL("description.xml");
   SSDP.setHTTPPort(80);
   SSDP.setName(deviceName);
+  SSDP.setModelName("esp8266");
+
   SSDP.setURL("/");
   SSDP.begin();
   SSDP.setDeviceType("upnp:rootdevice");
