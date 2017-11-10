@@ -12,7 +12,7 @@
 
 namespace EasySSDP {
 
-void setup(ESP8266WebServer &server, const char* deviceName="ESP8266") {
+void begin(ESP8266WebServer &server, const char* deviceName="ESP8266") {
 
   //SSDP makes device visible on windows network
   server.on("/description.xml", HTTP_GET, [&]() {

@@ -105,7 +105,7 @@ void setup() {
     server.send(200, "application/json", jsonchar);
   });
 
-  EasySSDP::setup(server, DEVICE_NAME);
+  EasySSDP::begin(server, "my esp8266 device");
 
   server.begin();
   DEBUG_PRINT("setup complete.");
