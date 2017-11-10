@@ -19,6 +19,7 @@
 #include <DNSServer.h>
 #include <FS.h>
 #include <SPIFFSReadServer.h>
+#include "EasySSDP.h"
 
 #define RELAY_PIN D7
 #define PULSEWIDTH 5000
@@ -104,16 +105,7 @@ void setup() {
     server.send(200, "application/json", jsonchar);
   });
 
-  //SSDP makes device visible on windows network
-  server.on("/description.xml", HTTP_GET, []() {
-    SSDP.schema(server.client());
-  });
-  SSDP.setSchemaURL("description.xml");
-  SSDP.setHTTPPort(80);
-  SSDP.setName(DEVICE_NAME);
-  SSDP.setURL("/");
-  SSDP.begin();
-  SSDP.setDeviceType("upnp:rootdevice");
+  EasySSDP::setup(server, DEVICE_NAME);
 
   server.begin();
   DEBUG_PRINT("setup complete.");
