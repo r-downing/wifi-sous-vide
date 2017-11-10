@@ -15,20 +15,20 @@
 
 			$scope.maskN = 24;
 
-				window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;   //compatibility for firefox and chrome
-				var pc = new RTCPeerConnection({ iceServers: [] }), noop = function () { };
-				pc.createDataChannel("");    //create a bogus data channel
-				pc.createOffer(pc.setLocalDescription.bind(pc), noop);    // create offer and set local description
-				pc.onicecandidate = function (ice) {  //listen for candidate events
-					if (!ice || !ice.candidate || !ice.candidate.candidate) return;
-					$scope.myIP = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/.exec(ice.candidate.candidate)[1];
-					console.log('my IP: ', $scope.myIP);
-					console.log(ice.candidate.candidate);
-					pc.onicecandidate = noop;
+			window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;   //compatibility for firefox and chrome
+			var pc = new RTCPeerConnection({ iceServers: [] }), noop = function () { };
+			pc.createDataChannel("");    //create a bogus data channel
+			pc.createOffer(pc.setLocalDescription.bind(pc), noop);    // create offer and set local description
+			pc.onicecandidate = function (ice) {  //listen for candidate events
+				if (!ice || !ice.candidate || !ice.candidate.candidate) return;
+				$scope.myIP = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/.exec(ice.candidate.candidate)[1];
+				console.log('my IP: ', $scope.myIP);
+				console.log(ice.candidate.candidate);
+				pc.onicecandidate = noop;
 
-					$scope.calcSubnet();
-					$scope.$apply();
-				};
+				$scope.calcSubnet();
+				$scope.$apply();
+			};
 
 			$scope.calcSubnet = function () {
 				var ipc = [0, 0, 0, 0];
@@ -69,9 +69,14 @@
 							for (ip[3] = $scope.subnetMin[3]; ip[3] <= $scope.subnetMax[3]; ip[3]++) {
 								$scope.scanning++;
 								let ips = 'http://' + ip.join('.');
-								$http.get(ips + '/esp8266-project.json').then(function (res) {
-									res.data.ip = ips;
-									$scope.devices.push(res.data);
+								$http.get(ips + '/description.xml').then(function (res) {
+									console.log(res.data);
+									//res.data.ip = ips;
+									var $xml = $($.parseXML(res.data));
+									var modelName = $xml.find("modelName")[0].innerHTML;
+									var deviceName = $xml.find("friendlyName")[0].innerHTML;
+									console.log(modelName);
+									if (modelName == "esp8266") $scope.devices.push({ device_name: deviceName, ip: ips });
 									//update cookie
 									// https://stackoverflow.com/questions/12624181/how-to-set-expiration-date-for-cookie-in-angularjs
 								}).finally(function () {
