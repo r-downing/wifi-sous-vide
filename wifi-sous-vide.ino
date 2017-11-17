@@ -9,7 +9,7 @@
 #endif
 
 
-#include <PersWiFiManager.h>
+#include <PersWiFiManager.h> //http://ryandowning.net/PersWiFiManager
 #include <AutoPID.h>
 #include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
@@ -18,8 +18,8 @@
 #include <ESP8266WebServer.h>
 #include <DNSServer.h>
 #include <FS.h>
-#include <SPIFFSReadServer.h>
-#include "EasySSDP.h"
+#include <SPIFFSReadServer.h> //http://ryandowning.net/SPIFFSReadServer
+#include <EasySSDP.h> //http://ryandowning.net/EasySSDP
 
 #define RELAY_PIN D7
 #define PULSEWIDTH 5000
