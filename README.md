@@ -10,7 +10,7 @@ The core of the device is an ESP8266 microcontroller/WiFi chip. It is controlled
 The physical components are a temperature sensor and a relay. This setup works in conjunction with a crock-pot, slow-cooker, or other existing heating element. The temperature sensor is immersed in the water and provides feedback to the controller. The crock-pot is plugged into a socket controlled by the relay and left on high. The device uses a PID control algorithm and PWM to pulse the power on and off over a time interval of a few seconds, in order to maintain the perfect temperature very closely.
 
 ## UI Screenshot
-![](https://i.imgur.com/xVRlLC2.png)
+![](img/ui.png)
 
 # Materials
 
