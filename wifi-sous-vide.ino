@@ -68,6 +68,9 @@ void setup() {
   digitalWrite(RELAY_PIN, HIGH);
 
   persWM.setApCredentials(DEVICE_NAME);
+  persWM.onConnect([](){
+    EasySSDP::begin(server, DEVICE_NAME);
+  });
   persWM.begin();
 
   //handles commands from webpage, sends live data in JSON format
@@ -105,7 +108,6 @@ void setup() {
     server.send(200, "application/json", jsonchar);
   });
 
-  EasySSDP::begin(server, DEVICE_NAME);
 
   server.begin();
   DEBUG_PRINT("setup complete.");
