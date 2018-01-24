@@ -1,4 +1,4 @@
-//#define DEBUG
+#define DEBUG
 
 #ifdef DEBUG
 #define DEBUG_START Serial.begin(115200)
@@ -75,10 +75,16 @@ void setup() {
 
   //handles commands from webpage, sends live data in JSON format
   server.on("/io", []() {
+    #ifdef DEBUG
+    for(int i = 0; i<server.args(); i++){
+      DEBUG_PRINT(server.argName(i)+":"+server.arg(i));
+    }
+    #endif
     DEBUG_PRINT("server.on /io");////////////////////////
     if (server.hasArg("setTemp")) {
       powerOn = true;
       setTemp = server.arg("setTemp").toFloat();
+      DEBUG_PRINT(setTemp);
     } //if
     if (server.hasArg("powerOff")) {
       powerOn = false;

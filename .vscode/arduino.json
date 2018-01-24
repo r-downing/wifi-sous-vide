@@ -1,4 +1,4 @@
 {
     "board": "esp8266:esp8266:d1_mini",
-    "configuration": "CpuFrequency=80,UploadSpeed=921600,FlashSize=4M3M"
+    "configuration": "CpuFrequency=80,FlashSize=4M3M,LwIPVariant=v2mss536,Debug=Disabled,DebugLevel=None____,UploadSpeed=921600"
 }
