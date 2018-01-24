@@ -1,4 +1,17 @@
-# wifi-sous-vide
+	# wifi-sous-vide
+
+- [wifi-sous-vide](#wifi-sous-vide)
+- [About](#about)
+	- [How it Works](#how-it-works)
+	- [UI Screenshot](#ui-screenshot)
+- [Materials](#materials)
+	- [Core components](#core-components)
+- [Wiring](#wiring)
+	- [Wemos D1 Mini](#wemos-d1-mini)
+	- [Relay](#relay)
+	- [Temperature Sensor](#temperature-sensor)
+	
+
 WiFi-controlled Sous Vide on [ESP8266 (arduino)](https://github.com/esp8266/Arduino). This project is being continually improved, and I am factoring out much of my code into libraries for general use and other projects. 
 
 # About
@@ -20,3 +33,17 @@ Item | Source | Cost
 Wemos D1 Mini Clone | [AliExpress](https://www.aliexpress.com/item/D1-mini-V2-Mini-NodeMcu-4M-bytes-Lua-WIFI-Internet-of-Things-development-board-based-ESP8266/32681374223.html) | ~$3 
 DS18B20 Waterproof Temp sensor | [Aliexpress](https://www.aliexpress.com/item/Free-Shipping-1pcs-DS18B20-Stainless-steel-package-1-meters-waterproof-DS18b20-temperature-probe-temperature-sensor-18B20/32305869288.html) | ~$1
 Solid state relay (DC control, AC output) | [Amazon](https://www.amazon.com/gp/product/B00E1LC1VK/ref=oh_aui_search_detailpage?ie=UTF8&th=1) | ~$10
+
+# Wiring
+
+## Wemos D1 Mini
+
+This is the main controller and power source for the other components. On my setup, I power this board via USB and a phone charger plug.
+
+## Relay
+
+The relay is connected with inverted logic (*LOW* turns the relay on). The **+** is connected to the 3.3v supply from the Wemos and the **-** is connected to the RELAY_PIN defined as **D7** in the code.
+
+## Temperature Sensor
+
+The temperature sensor is connected to the same ground and 3.3v supply from the Wemos, and the data wire is connected to the TEMP_SENSOR_PIN defined as **D4** in the code.
