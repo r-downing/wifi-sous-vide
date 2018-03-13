@@ -10,6 +10,7 @@
 	- [Wemos D1 Mini](#wemos-d1-mini)
 	- [Relay](#relay)
 	- [Temperature Sensor](#temperature-sensor)
+- [ToDo](#todo)
 	
 
 WiFi-controlled Sous Vide on [ESP8266 (arduino)](https://github.com/esp8266/Arduino). This project is being continually improved, and I am factoring out much of my code into libraries for general use and other projects. 
@@ -47,3 +48,6 @@ The relay is connected with inverted logic (*LOW* turns the relay on). The **+**
 ## Temperature Sensor
 
 The temperature sensor is connected to the same ground and 3.3v supply from the Wemos, and the data wire is connected to the TEMP_SENSOR_PIN defined as **D4** in the code.
+
+# ToDo
+- [ ] Celcius option (with unit preference stored in a cookie maybe?)
